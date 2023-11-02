@@ -3,12 +3,30 @@ import { useEffect, useState, useContext } from 'react'
 import { InputText } from '../../components'
 import { Button } from 'antd'
 import withLogger from '../../hocs/withLogger'
+import { useForm } from 'react-hook-form'
+
 //import {userContext} from '../../contexts/User'
+type Profile = {
+    email: string,
+    password: string,
+}
 
 const Login = () => {
     //Демонстрация доступности контекста
     //const value = useContext(userContext)
     //console.log('userContext', value)
+
+    const {
+        register,
+        formState: { errors },
+        handleSubmit,
+        reset
+    } = useForm<Profile>();
+
+    const onSubmit = handleSubmit((data: any) => {
+        alert(JSON.stringify(data));
+        reset();
+    })
 
     const [isSign, setSign] = useState<boolean>(false)
     
@@ -138,15 +156,40 @@ const Login = () => {
                     </form>
                 </div>
                 <div className="form-container sign-in-container">
-                    <form action="#">
+                    <form action="#" onSubmit={onSubmit}>
                         <h1>Войти</h1>
-                        <InputText
-                            type="email"
+                        <input {...register("email", {
+                            required: "Поле обязательно к заполнению",
+                            minLength: {
+                                value: 5,
+                                message: "Введите больше 5 символов"
+                                },
+                            maxLength: {
+                                value: 20,
+                                message: "Введите менее 20 символов"
+                                },
+                            pattern: {
+                                value: /^[a-zA-Z0-9]+$/,
+                                message: "Только цифры и английские буквы"
+                                },
+                            })}
                             placeholder="Email"
                         />
-                        <InputText type="password" placeholder="Пароль" />
+                        <div>{errors?.email && <p>{errors.email.message}</p>}</div>
+                        <input
+                            {...register("password", {
+                                required: "Поле обязательно к заполнению",
+                                pattern: {
+                                    value: /^[a-z0-9_\-*]+$/,
+                                    message: "Только цифры и маленькие английские буквы и _-*"
+                                },
+                            })}
+                            type="password"
+                            placeholder="Пароль"
+                        />
+                        <div>{errors?.password && <p>{errors.password.message}</p>}</div>
                         <a href="#">Забыли пароль</a>
-                        <button>Войти</button>
+                        <button type="submit">Войти</button>
                     </form>
                 </div>
                 <div className="overlay-container">
