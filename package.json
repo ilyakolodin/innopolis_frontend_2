@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@redux-devtools/extension": "^3.2.5",
+    "@reduxjs/toolkit": "^1.9.7",
     "antd": "^5.9.2",
     "chart.js": "^4.4.0",
     "react": "^18.2.0",
